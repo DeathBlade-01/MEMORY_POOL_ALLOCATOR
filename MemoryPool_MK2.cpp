@@ -111,6 +111,19 @@ void MemoryPool::deallocateInternal(void* ptr) {
 void MemoryPool::reset() {
     if (threadSafe) {
         std::lock_guard<std::mutex> lock(poolMutex);
+   	 freeBlockCount = totalBlocks;
+    
+	    // Rebuild free list
+	    freeList = static_cast<Block*>(memoryStart);
+	    Block* current = freeList;
+	    
+	    for (size_t i = 0; i < totalBlocks - 1; ++i) {
+		void* nextAddr = static_cast<char*>(static_cast<void*>(current)) + blockSize;
+		current->next = static_cast<Block*>(nextAddr);
+		current = current->next;
+	    }
+	    current->next = nullptr;
+
     }
     
     freeBlockCount = totalBlocks;
