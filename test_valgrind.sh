@@ -11,3 +11,7 @@ cg_annotate cachegrind.out.* | head -50
 echo -e "\n=== Callgrind Profiling ==="
 valgrind --tool=callgrind ./output/BENCH_1
 callgrind_annotate callgrind.out.* | head -50
+
+
+echo -e "\n===Cache Statistics==="
+valgrind --tool=cachegrind --cache-sim=yes ./output/BENCH_1
